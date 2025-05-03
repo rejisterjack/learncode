@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express"
-import jwt from "jsonwebtoken"
-import { db } from "../libs/db"
+import type { NextFunction, Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
+import { db } from '../libs/db'
 
 declare global {
   namespace Express {
@@ -24,7 +24,7 @@ export const authMiddleware = async (
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: "Unauthorized - No token provided",
+      message: 'Unauthorized - No token provided',
       authenticated: false,
     })
   }
@@ -32,7 +32,7 @@ export const authMiddleware = async (
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "fallback-secret-key"
+      process.env.JWT_SECRET || 'fallback-secret-key'
     ) as { id: string; [key: string]: any }
 
     const user = await db.user.findUnique({
@@ -42,7 +42,7 @@ export const authMiddleware = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: 'User not found',
         authenticated: false,
       })
     }
@@ -52,11 +52,52 @@ export const authMiddleware = async (
 
     next()
   } catch (error) {
-    console.error("Auth middleware error:", error)
+    console.error('Auth middleware error:', error)
     return res.status(401).json({
       success: false,
-      message: "Unauthorized - Invalid token",
+      message: 'Unauthorized - Invalid token',
       authenticated: false,
+    })
+  }
+}
+
+export const checkAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?.id
+    if (!userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden - No user ID found',
+      })
+    }
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    })
+
+    if (!user) {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden - User not found',
+      })
+    }
+    if (user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden - User is not an admin',
+      })
+    }
+
+    next()
+  } catch (error) {
+    console.error('Check admin error:', error)
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
     })
   }
 }
