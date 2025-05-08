@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run index.ts",
+    "dev": "nodemon --exec bun run index.ts",
     "build": "bun build src/index.ts --outdir=dist --format=cjs",
     "start": "bun run build && bun dist/index.js",
     "lint": "bun run lint",
