@@ -1,0 +1,284 @@
+{
+  "info": {
+    "name": "LearnCode API",
+    "description": "API endpoints for LearnCode application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Register a new user"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Login to get authentication token"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            },
+            "description": "Logout and invalidate token"
+          }
+        },
+        {
+          "name": "Check Auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/check",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "check"]
+            },
+            "description": "Check authentication status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Problems",
+      "description": "Problem management endpoints",
+      "item": [
+        {
+          "name": "Create Problem",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/problems/create-problem",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "problems", "create-problem"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Two Sum\",\n  \"description\": \"Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\",\n  \"difficulty\": \"EASY\",\n  \"tags\": [\"array\", \"hash-table\"],\n  \"examples\": [\n    {\n      \"input\": \"nums = [2,7,11,15], target = 9\",\n      \"output\": \"[0,1]\",\n      \"explanation\": \"Because nums[0] + nums[1] == 9, we return [0, 1].\"\n    }\n  ],\n  \"constraints\": \"2 <= nums.length <= 104\\n-109 <= nums[i] <= 109\\n-109 <= target <= 109\",\n  \"hints\": \"Try using a hash map to store previously seen numbers.\",\n  \"editorial\": \"The brute force approach would use two nested loops to find all pairs. A more efficient approach uses a hash map.\",\n  \"testCases\": {\n    \"basic\": [\n      {\n        \"input\": [\"[2,7,11,15]\", \"9\"],\n        \"expected\": \"[0,1]\"\n      },\n      {\n        \"input\": [\"[3,2,4]\", \"6\"],\n        \"expected\": \"[1,2]\"\n      }\n    ]\n  },\n  \"codeSnippets\": {\n    \"javascript\": \"function twoSum(nums, target) {\\n  // Your code here\\n}\",\n    \"python\": \"def two_sum(nums, target):\\n    # Your code here\\n    pass\"\n  },\n  \"referenceSolutions\": {\n    \"javascript\": \"function twoSum(nums, target) {\\n  const map = {};\\n  for (let i = 0; i < nums.length; i++) {\\n    const complement = target - nums[i];\\n    if (map[complement] !== undefined) {\\n      return [map[complement], i];\\n    }\\n    map[nums[i]] = i;\\n  }\\n  return [];\\n}\"\n  }\n}"
+            },
+            "description": "Create a new problem (admin only)"
+          }
+        },
+        {
+          "name": "Get All Problems",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/problems/get-problems",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "problems", "get-problems"]
+            },
+            "description": "Get list of all problems"
+          }
+        },
+        {
+          "name": "Get Problem by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/problems/get-problem/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "problems", "get-problem", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "problem-id-here"
+                }
+              ]
+            },
+            "description": "Get a specific problem by ID"
+          }
+        },
+        {
+          "name": "Update Problem",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/problems/update-problem/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "problems", "update-problem", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "problem-id-here"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Two Sum\",\n  \"description\": \"Updated description for the Two Sum problem.\",\n  \"difficulty\": \"MEDIUM\",\n  \"tags\": [\"array\", \"hash-table\", \"algorithms\"],\n  \"hints\": \"Updated hint for the problem.\"\n}"
+            },
+            "description": "Update an existing problem (admin only)"
+          }
+        },
+        {
+          "name": "Delete Problem",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/problems/delete-problem/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "problems", "delete-problem", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "problem-id-here"
+                }
+              ]
+            },
+            "description": "Delete a problem (admin only)"
+          }
+        },
+        {
+          "name": "Get Solved Problems",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/problems/get-solved-problems",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "problems", "get-solved-problems"]
+            },
+            "description": "Get all problems solved by the current user"
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-extract auth token from login response",
+          "if (pm.response.code === 200 && pm.info.requestName === \"Login\") {",
+          "    const jsonResponse = pm.response.json();",
+          "    if (jsonResponse.token) {",
+          "        pm.environment.set(\"authToken\", jsonResponse.token);",
+          "        console.log(\"Auth token saved to environment\");",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ]
+}

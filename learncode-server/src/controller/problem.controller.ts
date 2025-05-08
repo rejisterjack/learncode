@@ -50,6 +50,7 @@ export const createProblem = async (req, res) => {
       const results = await pollBatchResults(tokens)
 
       for (const result of results) {
+        console.log('Submission result:', result)
         if (result.status.id !== 3) {
           return res.status(400).json({
             message: `Test case failed for language ${language}: ${result.status.description}`,
