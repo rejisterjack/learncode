@@ -28,6 +28,12 @@ export const createProblem = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Missing required fields' })
     }
 
+    if (!referenceSolutions || Object.keys(referenceSolutions).length === 0) {
+      return res
+        .status(400)
+        .json({ message: 'Reference solutions are required' })
+    }
+
     for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
       const languageId = getJudge0LanguageId(language)
 
@@ -55,35 +61,33 @@ export const createProblem = async (req: Request, res: Response) => {
       const results = await pollBatchResults(tokens)
 
       for (const result of results) {
-        console.log('Submission result:', result)
         if (result.status.id !== 3) {
           return res.status(400).json({
             message: `Test case failed for language ${language}: ${result.status.description}`,
           })
         }
       }
-
-      const newProblem = await db.problem.create({
-        data: {
-          title,
-          description,
-          difficulty,
-          tags,
-          examples,
-          constraints,
-          testCases,
-          codeSnippets,
-          referenceSolutions,
-          userId: req.user.id,
-        },
-      })
-
-      return res.status(201).json({
-        success: true,
-        message: 'Problem created successfully',
-        problem: newProblem,
-      })
     }
+    const newProblem = await db.problem.create({
+      data: {
+        title,
+        description,
+        difficulty,
+        tags,
+        examples,
+        constraints,
+        testCases,
+        codeSnippets,
+        referenceSolutions,
+        userId: req.user.id,
+      },
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'Problem created successfully',
+      problem: newProblem,
+    })
   } catch (error) {
     console.error('Error creating problem:', error)
     res.status(500).json({ message: 'Internal server error' })
@@ -110,7 +114,7 @@ export const getProblems = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Problem created successfully',
+      message: 'Problem fetched successfully',
       problems,
       totalPages: Math.ceil(totalProblems / limit),
       currentPage: page,
