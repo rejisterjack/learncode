@@ -2,6 +2,8 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import { authRouter } from './routes/auth.routes'
 import { problemRouter } from './routes/problem.routes'
+import { executionRouter } from './routes/execution.routes'
+import { submissionRouter } from './routes/submission.routes'
 
 const app = express()
 
@@ -13,5 +15,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/problems', problemRouter)
+app.use("/api/v1/execution", executionRouter)
+app.use("/api/v1/submission", submissionRouter)
 
 export default app

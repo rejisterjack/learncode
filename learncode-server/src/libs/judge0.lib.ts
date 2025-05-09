@@ -11,6 +11,16 @@ export const getJudge0LanguageId = (language: string): number | null => {
   return languageMap[language.toUpperCase()] || null
 }
 
+export const getJudge0LanguageName = (languageId: number): string => {
+  const languageMap: Record<number, string> = {
+    71: 'Python',
+    62: 'Java',
+    63: 'JavaScript',
+  }
+
+  return languageMap[languageId] || "Unknown"
+}
+
 export const submitBatch = async (submissions: any[]) => {
   const { data } = await judgeApi.post(
     '/submissions/batch?base64_encoded=false',
