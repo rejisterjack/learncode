@@ -71,7 +71,7 @@ export const executeCode = async (req: Request, res: Response) => {
 
       if (!passed) {
         allPassed = false
-      }
+      } 
       return {
         testCase: index + 1,
         passed,
